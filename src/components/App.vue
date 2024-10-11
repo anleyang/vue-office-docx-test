@@ -1,34 +1,33 @@
 <template>
-  <vue-office-docx
-    :src="docx"
-    style="height: 100vh;"
-    @rendered="rendered"
-  />
-</template>
+    <div class="preview_box">
+       <div ref="docxPreviewRef"></div>
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios'
+  import { renderAsync }  from 'docx-preview'
 
-<script>
-//引入VueOfficeDocx组件
-import VueOfficeDocx from '@vue-office/docx'
-//引入相关样式
-import '@vue-office/docx/lib/index.css'
-
-export default {
-  components: {
-    VueOfficeDocx
-  },
-  data() {
-    return {
-      docx: 'http://static.shanhuxueyuan.com/test6.docx' 
-    }
-  },
-  methods: {
-    rendered() {
-      console.log("渲染完成")
+  
+  export default {
+    name: 'preview',
+    components:{},
+    data () {
+      return {
+        src:`http://static.shanhuxueyuan.com/test6.docx`,
+      }
+    },
+    mounted(){
+      this.docToHtml();
+    },
+    methods: {
+      docToHtml(){
+        axios.get(this.src,{ responseType: 'arraybuffer' }).then((res)=>{
+          renderAsync(res.data, this.$refs.docxPreviewRef);
+        })
+      }
     }
   }
-}
-</script>
-
-<style scoped>
-/* 添加必要的样式调整 */
-</style>
+  </script>
+  <style scoped></style>
+  
